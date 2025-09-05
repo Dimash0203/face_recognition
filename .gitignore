@@ -1,0 +1,97 @@
+# ======================================================================
+# Python
+# ======================================================================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
+*.manifest
+*.spec
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+
+# Jupyter / IPython
+.ipynb_checkpoints/
+.profile
+.python-version
+
+# Logs & debug
+*.log
+*.pot
+*.mo
+*.sqlite3
+*.db
+*.pid
+*.seed
+*.cover
+.coverage
+coverage.xml
+*.py,cover
+htmlcov/
+
+# ======================================================================
+# Project specific
+# ======================================================================
+# DeepFace / ML weights
+.deepface/
+weights/*.zip
+weights/*.tar
+weights/*.7z
+weights/*.h5
+weights/cache/
+*.onnx
+
+# TensorFlow / Keras cache
+.tensorflow/
+.keras/
+
+# Local configs
+.env
+.env.*
+!*.example        # keep .env.example in repo
+
+# ======================================================================
+# IDE / Editors
+# ======================================================================
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ======================================================================
+# OS files
+# ======================================================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# ======================================================================
+# Docker / Containers
+# ======================================================================
+*.pid
+*.seed
+*.bak
+*.tmp
+*.temp
+*.orig
+
+# Docker files
+*.tar
+*.log
+*.lock
+*.bak
+*.swp
+docker-compose.override.yml

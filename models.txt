@@ -1,0 +1,6 @@
+# Enable/disable verification models (True/False)
+# Supported: Facenet, Facenet512, ArcFace
+
+Facenet    = True
+Facenet512 = False
+ArcFace    = False
