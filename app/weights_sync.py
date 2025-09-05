@@ -4,12 +4,6 @@ from pathlib import Path
 from .config import settings
 
 def ensure_local_weights_available() -> Path:
-    """
-    Make DeepFace load weights from *this project*:
-    - set DEEPFACE_HOME to project root
-    - copy ./weights/*.h5 → ./ .deepface/weights/
-    Returns the deepface cache path.
-    """
     os.environ["DEEPFACE_HOME"] = str(settings.deepface_home)  # e.g., project root
 
     deepface_cache = settings.deepface_home / ".deepface" / "weights"

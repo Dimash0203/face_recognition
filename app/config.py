@@ -8,12 +8,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 SUPPORTED_MODELS = ["Facenet", "Facenet512", "ArcFace", "VGG-Face"]
 
 def read_models_txt(path: Path, default: List[str]) -> List[str]:
-    """
-    Parse models.txt lines like:  Facenet = True  /  ArcFace = False
-    - Ignores comments/blank lines
-    - Only allows SUPPORTED_MODELS
-    - Returns 'default' if file missing or all set to False
-    """
     if not path.exists():
         return default
 
@@ -68,10 +62,6 @@ class Settings(BaseSettings):
 
     @property
     def selected_models(self) -> list[str]:
-        """
-        Final list of models the service will use, considering models.txt.
-        Fallback to 'verification_models' if models.txt disables everything.
-        """
         return read_models_txt(self.models_txt_path, self.verification_models)
 
 settings = Settings()
