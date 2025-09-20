@@ -1,28 +1,57 @@
 # main.py
+import contextlib
 import os
+import warnings
+import asyncio
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from app.api import router
 from app.config import settings
 from app.weights_sync import ensure_local_weights_available
-from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
-from fastapi import FastAPI
-from app.config import settings
 from app.models_registry import get_model
-os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
+from app.logger import setup_logging
+from app.watchdog import watchdog_task
 
+# Подавление "шумных" сообщений
+os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
+os.environ.setdefault("TF_ENABLE_ONEDNN_OPTS", "0")
+warnings.filterwarnings("ignore", category=UserWarning, module="tf_keras")
+
+logger = setup_logging()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Ensure DeepFace loads weights from project ./weights
+    # 1) Готовим веса
     cache_path = ensure_local_weights_available()
-    print(f"[startup] Weights available at: {cache_path}")
-    # preload models
-    for name in settings.verification_models:
-        get_model(name)
+    logger.info("[startup] Весовые файлы доступны в: {}", cache_path)
 
-    yield
+    # 2) Прогреваем Facenet
+    for name in settings.verification_models:
+        try:
+            get_model(name)
+            logger.info("[startup] Модель '{}' загружена", name)
+        except Exception as e:
+            logger.exception("[startup] Не удалось загрузить модель '{}': {}", name, e)
+
+    # 3) Watchdog
+    task = None
+    if settings.watchdog_enabled:
+        task = asyncio.create_task(watchdog_task())
+        logger.info("[startup] Watchdog запущен (interval={}s)", settings.watchdog_interval_sec)
+
+    try:
+        yield
+    finally:
+        if task:
+            task.cancel()
+            with contextlib.suppress(Exception):
+                await task
+        logger.info("[shutdown] Завершение работы приложения")
 
 app = FastAPI(title=settings.app_name, version=settings.version, lifespan=lifespan)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -30,8 +59,8 @@ app.add_middleware(
     allow_methods=["POST","GET","OPTIONS"],
     allow_headers=["*"],
 )
-app.include_router(router)
 
+app.include_router(router)
 
 if __name__ == "__main__":
     import uvicorn

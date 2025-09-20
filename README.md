@@ -1,157 +1,123 @@
-# Face Recognition API
+# Face Verification API (только Facenet)
 
-Микросервис на **FastAPI** для оффлайн-сравнения лиц с использованием [DeepFace](https://github.com/serengil/deepface).
+Этот сервис реализует оффлайн‑сравнение лиц по фотографиям с использованием модели **Facenet**.
+
+---
+
+## Возможности
+
+- Сравнение двух изображений (multipart/form-data или base64).
+- Используется только модель **Facenet**.
+- Поддержка watchdog:
+  - Периодически выполняет смоук‑тест на эталонном фото.
+  - Автоматически сбрасывает/перезагружает модели при сбоях.
+- Админ‑эндпоинт для ручного сброса моделей.
 
 ---
 
 ## Структура проекта
+
 ```
 face_recognition/
-│── app/                # код API (роуты, конфиг, утилиты)
-│── weights/            # веса моделей (.h5 файлы из Google Drive)
-│── main.py             # точка входа FastAPI
-│── requirements.txt    # зависимости
-│── models.txt          # включение/отключение моделей (True/False)
-```
-⚠️ В папке `weights/` должны находиться скачанные файлы моделей (`.h5`) из Google Drive.
-
----
-
-## Старт
-
-### 1. Клонировать репозиторий
-```bash
-git clone https://github.com/Dimash0203/face_recognition.git
-cd face_recognition
+├── app/                # код приложения (API, сервис, утилиты)
+├── weights/            # веса моделей (.h5)
+├── logs/               # файлы логов
+├── tests/              # тестовые изображения (для watchdog)
+│   └── same.jpeg
+├── .env                # конфигурация
+├── main.py             # точка входа
+├── requirements.txt
+└── README.md
 ```
 
-### 2. Установить зависимости
-```bash
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-# Linux/Mac: source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
+## API
+
+### Проверка здоровья
 ```
-
-### 3. Скачать веса моделей
-Скачать из Google Drive → [weights](https://drive.google.com/drive/folders/1_DEIoTXIyLP3SvhsNLdoY2OyutUV1Sxo?usp=drive_link)  
-и положить файлы `*.h5` в папку `./weights/`.
-
-### 4. Настроить модели
-В файле **models.txt** укажите, какие модели использовать:
-```ini
-Facenet    = True
-Facenet512 = False
-ArcFace    = False
+GET /healthz
 ```
-По умолчанию включен только **Facenet**.
-
-### 5. Запуск
-```bash
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-```
-Документация API → [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-
----
-
-## API эндпоинты
-
-### `GET /models`  
-Список активированных моделей (по данным `models.txt`).
-
-**Пример запроса:**
-```bash
-curl -X GET "http://127.0.0.1:8000/models" -H "accept: application/json"
-```
-**Пример ответа:**
+Ответ:
 ```json
-[
-  "Facenet"
-]
+{"status":"ok","app":"Face Verification API","version":"1.2.0"}
 ```
 
----
-
-### `POST /verify`  
-Сравнение двух изображений (multipart/form-data).
-
-**Параметры:**  
-- `image1` — первое изображение (jpeg/png)  
-- `image2` — второе изображение (jpeg/png)  
-
-**Пример запроса:**
-```bash
-curl -X POST "http://127.0.0.1:8000/verify"   -H "accept: application/json"   -H "Content-Type: multipart/form-data"   -F "image1=@same2.jpeg;type=image/jpeg"   -F "image2=@same1.jpeg;type=image/jpeg"
+### Список моделей
 ```
+GET /models
+```
+Ответ: `["Facenet"]`
 
-**Пример ответа:**
+### Сравнение изображений (multipart)
+```
+POST /verify?threshold=0.75
+```
+Формат: `multipart/form-data` с двумя файлами (`image1`, `image2`).
+
+### Сравнение изображений (base64)
+```
+POST /verify-b64
+```
+Тело запроса:
 ```json
 {
-  "detector_backend": "retinaface",
-  "threshold": 0.7,
+  "image1_b64": "data:image/jpeg;base64,...",
+  "image2_b64": "data:image/jpeg;base64,...",
+  "threshold": 0.8
+}
+```
+
+### Ручной сброс моделей
+```
+POST /admin/reload
+```
+Ответ:
+```json
+{"status":"ok","message":"Модели перезагружены"}
+```
+
+---
+
+## Логирование
+
+- Все логи пишутся в `logs/app.txt`.
+- Уровень логирования задаётся переменной `LOG_LEVEL` (по умолчанию INFO).
+
+---
+
+## Ошибки
+
+- Если лицо не найдено:
+  ```json
+  {"model":"Facenet","error":"Лицо не обнаружено на изображении 1..."}
+  ```
+- Если произошла внутренняя ошибка: пользователю короткое сообщение, в логах — полная трассировка.
+
+---
+
+## Watchdog
+
+- Каждые `WATCHDOG_INTERVAL_SEC` секунд запускается смоук‑тест на файле `SMOKETEST_IMAGE_PATH`.
+- Если тест не пройден, автоматически выполняется `reset_models()` и прогружается Facenet заново.
+- Можно отключить в `.env`:
+  ```env
+  WATCHDOG_ENABLED=false
+  ```
+
+---
+
+## Пример использования
+
+```bash
+curl -X POST "http://localhost:8000/verify?threshold=0.8"   -F "image1=@tests/same1.jpeg"   -F "image2=@tests/same1.jpeg"
+```
+
+Ответ:
+```json
+{
+  "detector_backend": "opencv",
+  "threshold": 0.8,
   "results": [
-    {
-      "model": "Facenet",
-      "lookalike_percent": 72,
-      "same_person": true,
-      "error": null
-    }
+    {"model":"Facenet","lookalike_percent":100,"same_person":true}
   ]
 }
-```
-
----
-
-### `POST /verify-b64`  
-Сравнение изображений в **Base64** формате.
-
-**Пример тела запроса:**
-```json
-{
-  "image1_b64": "string",
-  "image2_b64": "string"
-}
-```
-
-**Пример ответа:**
-```json
-{
-  "detector_backend": "retinaface",
-  "threshold": 0.7,
-  "results": [
-    {
-      "model": "Facenet",
-      "lookalike_percent": 72,
-      "same_person": true,
-      "error": null
-    }
-  ]
-}
-```
-
----
-
-### `GET /healthz`  
-Проверка статуса сервиса.
-
-**Пример запроса:**
-```bash
-curl -X GET "http://127.0.0.1:8000/healthz" -H "accept: application/json"
-```
-
-**Пример ответа:**
-```json
-{
-  "status": "ok",
-  "app": "Face Verification API",
-  "version": "1.0.0"
-}
-```
-
----
-
-## Продакшен
-```bash
-gunicorn -c gunicorn_conf.py main:app
 ```

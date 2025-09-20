@@ -1,67 +1,54 @@
 # app/config.py
 from pathlib import Path
-from typing import List
-import re
-from pydantic import Field
+from typing import Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-SUPPORTED_MODELS = ["Facenet", "Facenet512", "ArcFace", "VGG-Face"]
-
-def read_models_txt(path: Path, default: List[str]) -> List[str]:
-    if not path.exists():
-        return default
-
-    enabled: List[str] = []
-    text = path.read_text(encoding="utf-8", errors="ignore")
-    for raw in text.splitlines():
-        line = raw.strip()
-        if not line or line.startswith("#"):
-            continue
-        m = re.match(r"^([A-Za-z0-9\-]+)\s*=\s*(true|false)$", line, flags=re.I)
-        if not m:
-            # silently skip malformed lines
-            continue
-        name, flag = m.group(1), m.group(2).lower() == "true"
-        if name not in SUPPORTED_MODELS:
-            # unknown model -> skip
-            continue
-        if flag:
-            enabled.append(name)
-
-    return enabled or default
+from pydantic import Field
 
 class Settings(BaseSettings):
+    # Базовая информация
     app_name: str = "Face Verification API"
-    version: str = "1.0.0"
+    version: str = "1.2.0"
 
-    # load from .env if present
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    # Важно:
+    # - env_file: читаем .env в корне проекта
+    # - case_sensitive=False: ключи переменных окружения и .env НЕчувствительны к регистру
+    #   => WATCHDOG_INTERVAL_SEC и watchdog_interval_sec эквивалентны
+    # - env_prefix="": не добавляем префиксы к именам переменных
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        env_prefix=""
+    )
 
-    # Project paths
+    # Пути проекта
     project_root: Path = Path(__file__).resolve().parents[1]
     weights_dir: Path = project_root / "weights"
-    deepface_home: Path = project_root
+    deepface_home: Path = project_root  # DeepFace создаст .deepface внутри
 
-    # models.txt location
-    models_txt_path: Path = project_root / "models.txt"
+    # Только Facenet
+    verification_models: list[str] = Field(default=["Facenet"])
 
-    # Default models if models.txt is missing/empty (keep your original default)
-    verification_models: list[str] = Field(default=["Facenet"])  # :contentReference[oaicite:1]{index=1}
+    # Детекторы
+    primary_detector: str = "opencv"
+    fallback_detector: str = "retinaface"  # используется только если есть локальный .h5
 
-    # Detector preference
-    primary_detector: str = "retinaface"
-    fallback_detector: str = "yunet"
-
-    # Decision/score
+    # Порог по умолчанию
     threshold: float = 0.70
-    percent_low: float = 0.30
-    percent_high: float = 0.95
 
-    # Upload limits
+    # Лимит размера входного файла
     max_image_bytes: int = 5 * 1024 * 1024  # 5 MB
 
-    @property
-    def selected_models(self) -> list[str]:
-        return read_models_txt(self.models_txt_path, self.verification_models)
+    # Логи
+    log_dir: Path = project_root / "logs"
+    log_level: str = "INFO"
+    log_rotation: str = "10 MB"
+    log_retention: str = "7 days"
+    log_filename: str = "app.txt"
+
+    # Watchdog / авто-санация
+    watchdog_enabled: bool = True
+    watchdog_interval_sec: int = 600
+    smoketest_image_path: Optional[Path] = None  # строка из .env будет преобразована в Path
 
 settings = Settings()
