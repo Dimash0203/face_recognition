@@ -2,7 +2,7 @@
 from __future__ import annotations
 import os, shutil
 from pathlib import Path
-from .config import settings
+from app.utils.config import settings
 
 def ensure_local_weights_available() -> Path:
     # Направляем DeepFace кешироваться в корень проекта

@@ -5,7 +5,7 @@ import numpy as np
 from numpy.linalg import norm
 from fastapi import UploadFile, HTTPException
 import cv2
-from .config import settings
+from app.utils.config import settings
 
 ALLOWED_MIME = {"image/jpeg", "image/png", "image/jpg"}
 DATA_URL_RE = re.compile(r"^data:(image/\w+);base64,(.+)$", re.IGNORECASE)

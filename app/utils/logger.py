@@ -3,7 +3,7 @@ import logging
 import sys
 from pathlib import Path
 from loguru import logger
-from .config import settings
+from app.utils.config import settings
 
 class InterceptHandler(logging.Handler):
     def emit(self, record):

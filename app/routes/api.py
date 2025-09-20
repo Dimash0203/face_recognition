@@ -3,10 +3,10 @@ from typing import List, Optional
 from fastapi import APIRouter, UploadFile, File, Query
 from pydantic import BaseModel, Field
 
-from .config import settings
-from .utils import read_image, read_image_b64
-from .service import verify_pair
-from .models_registry import reset_models
+from app.utils.config import settings
+from app.utils.utils_ml import read_image, read_image_b64
+from app.routes.service import verify_pair
+from app.models.models_registry import reset_models
 
 router = APIRouter()
 
@@ -77,6 +77,6 @@ def admin_reload():
     reset_models()
     # Прогреем снова, чтобы при первом запросе не тратить время
     for name in settings.verification_models:
-        from .models_registry import get_model
+        from app.models.models_registry import get_model
         get_model(name)
     return {"status": "ok", "message": "Модели перезагружены"}

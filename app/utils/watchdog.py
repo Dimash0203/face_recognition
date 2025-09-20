@@ -4,9 +4,9 @@ from typing import Optional
 import cv2
 import numpy as np
 from loguru import logger
-from .config import settings
-from .service import verify_pair
-from .models_registry import reset_models
+from app.utils.config import settings
+from app.routes.service import verify_pair
+from app.models.models_registry import reset_models
 
 def _make_dummy_pair() -> Optional[tuple[np.ndarray, np.ndarray]]:
     """

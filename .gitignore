@@ -50,7 +50,7 @@ weights/*.zip
 weights/*.tar
 weights/*.7z
 weights/*.h5
-weights/cache/
+app/weights/cache/
 *.onnx
 
 # TensorFlow / Keras cache

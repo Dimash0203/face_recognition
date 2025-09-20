@@ -7,12 +7,12 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import router
-from app.config import settings
-from app.weights_sync import ensure_local_weights_available
-from app.models_registry import get_model
-from app.logger import setup_logging
-from app.watchdog import watchdog_task
+from app.routes.api import router
+from app.utils.config import settings
+from app.models.weights_sync import ensure_local_weights_available
+from app.models.models_registry import get_model
+from app.utils.logger import setup_logging
+from app.utils.watchdog import watchdog_task
 
 # Подавление "шумных" сообщений
 os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")

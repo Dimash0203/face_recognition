@@ -5,9 +5,9 @@ import numpy as np
 from deepface import DeepFace
 from loguru import logger
 
-from .config import settings
-from .utils import cosine_sim, cosine_to_percent
-from .models_registry import get_model, reset_models
+from app.utils.config import settings
+from app.utils.utils_ml import cosine_sim, cosine_to_percent
+from app.models.models_registry import get_model, reset_models
 
 RETINAFACE_WEIGHT_NAME = "retinaface.h5"
 
