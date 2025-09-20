@@ -229,3 +229,60 @@ asyncio.exceptions.CancelledError
 2025-09-20 15:31:41.977 | ERROR    | Application shutdown failed. Exiting.
 2025-09-20 15:31:41.978 | INFO     | Finished server process [9692]
 2025-09-20 15:31:41.979 | INFO     | Finished server process [9692]
+2025-09-20 15:37:48.784 | INFO     | Логирование настроено. Файл: C:\Users\disag\PycharmProjects\face_recognition\logs\app.txt
+2025-09-20 15:37:48.786 | INFO     | Started server process [19120]
+2025-09-20 15:37:48.786 | INFO     | Started server process [19120]
+2025-09-20 15:37:48.786 | INFO     | Waiting for application startup.
+2025-09-20 15:37:48.792 | INFO     | Waiting for application startup.
+2025-09-20 15:37:48.792 | INFO     | [startup] Весовые файлы доступны в: C:\Users\disag\PycharmProjects\face_recognition\.deepface\weights
+2025-09-20 15:37:48.795 | INFO     | Загрузка модели 'Facenet'
+2025-09-20 15:37:51.634 | INFO     | [startup] Модель 'Facenet' загружена
+2025-09-20 15:37:51.634 | INFO     | [startup] Watchdog запущен (interval=600s)
+2025-09-20 15:37:52.444 | INFO     | Application startup complete.
+2025-09-20 15:37:52.444 | INFO     | Application startup complete.
+2025-09-20 15:37:52.447 | INFO     | Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2025-09-20 15:37:52.448 | INFO     | Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2025-09-20 15:37:56.550 | INFO     | Shutting down
+2025-09-20 15:37:56.550 | INFO     | Shutting down
+2025-09-20 15:37:56.659 | INFO     | Waiting for application shutdown.
+2025-09-20 15:37:56.659 | INFO     | Waiting for application shutdown.
+2025-09-20 15:37:56.659 | ERROR    | Traceback (most recent call last):
+  File "C:\Users\disag\PycharmProjects\face_recognition\.venv\Lib\site-packages\starlette\routing.py", line 693, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+  File "C:\Users\disag\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 217, in __aexit__
+    await anext(self.gen)
+  File "C:\Users\disag\PycharmProjects\face_recognition\.venv\Lib\site-packages\fastapi\routing.py", line 133, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "C:\Users\disag\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 217, in __aexit__
+    await anext(self.gen)
+  File "C:\Users\disag\PycharmProjects\face_recognition\main.py", line 50, in lifespan
+    await task
+  File "C:\Users\disag\PycharmProjects\face_recognition\app\watchdog.py", line 48, in watchdog_task
+    await asyncio.sleep(settings.watchdog_interval_sec)
+  File "C:\Users\disag\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py", line 649, in sleep
+    return await future
+           ^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+2025-09-20 15:37:56.659 | ERROR    | Traceback (most recent call last):
+  File "C:\Users\disag\PycharmProjects\face_recognition\.venv\Lib\site-packages\starlette\routing.py", line 693, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+  File "C:\Users\disag\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 217, in __aexit__
+    await anext(self.gen)
+  File "C:\Users\disag\PycharmProjects\face_recognition\.venv\Lib\site-packages\fastapi\routing.py", line 133, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "C:\Users\disag\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 217, in __aexit__
+    await anext(self.gen)
+  File "C:\Users\disag\PycharmProjects\face_recognition\main.py", line 50, in lifespan
+    await task
+  File "C:\Users\disag\PycharmProjects\face_recognition\app\watchdog.py", line 48, in watchdog_task
+    await asyncio.sleep(settings.watchdog_interval_sec)
+  File "C:\Users\disag\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py", line 649, in sleep
+    return await future
+           ^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+2025-09-20 15:37:56.659 | ERROR    | Application shutdown failed. Exiting.
+2025-09-20 15:37:56.664 | ERROR    | Application shutdown failed. Exiting.
+2025-09-20 15:37:56.664 | INFO     | Finished server process [19120]
+2025-09-20 15:37:56.664 | INFO     | Finished server process [19120]
