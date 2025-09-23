@@ -9,11 +9,6 @@ class Settings(BaseSettings):
     app_name: str = "Face Verification API"
     version: str = "1.2.0"
 
-    # Важно:
-    # - env_file: читаем .env в корне проекта
-    # - case_sensitive=False: ключи переменных окружения и .env НЕчувствительны к регистру
-    #   => WATCHDOG_INTERVAL_SEC и watchdog_interval_sec эквивалентны
-    # - env_prefix="": не добавляем префиксы к именам переменных
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
@@ -26,8 +21,7 @@ class Settings(BaseSettings):
     weights_dir: Path = project_root / "weights"
     deepface_home: Path = project_root  # DeepFace создаст .deepface внутри
 
-    # Только Facenet
-    verification_models: list[str] = Field(default=["Facenet"])
+    verification_models: list[str] = Field(default=["ArcFace", "Facenet", "Facenet512"])
 
     # Детекторы
     primary_detector: str = "opencv"

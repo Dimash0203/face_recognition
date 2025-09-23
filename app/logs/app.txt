@@ -1,0 +1,33 @@
+2025-09-23 19:07:32.920 | INFO     | Логирование настроено. Файл: C:\Users\disag\PycharmProjects\face_recognition\app\logs\app.txt
+2025-09-23 19:07:39.664 | INFO     | Логирование настроено. Файл: C:\Users\disag\PycharmProjects\face_recognition\app\logs\app.txt
+2025-09-23 19:07:39.981 | INFO     | Логирование настроено. Файл: C:\Users\disag\PycharmProjects\face_recognition\app\logs\app.txt
+2025-09-23 19:07:39.987 | INFO     | Started server process [22420]
+2025-09-23 19:07:39.987 | INFO     | Started server process [22420]
+2025-09-23 19:07:39.988 | INFO     | Waiting for application startup.
+2025-09-23 19:07:39.988 | INFO     | Waiting for application startup.
+2025-09-23 19:07:40.149 | INFO     | [startup] Весовые файлы доступны в: C:\Users\disag\PycharmProjects\face_recognition\app\.deepface\weights
+2025-09-23 19:07:40.150 | INFO     | Загрузка модели 'ArcFace'
+2025-09-23 19:07:45.301 | INFO     | Логирование настроено. Файл: C:\Users\disag\PycharmProjects\face_recognition\app\logs\app.txt
+2025-09-23 19:07:45.952 | INFO     | [startup] Модель 'ArcFace' загружена
+2025-09-23 19:07:45.952 | INFO     | Загрузка модели 'Facenet'
+2025-09-23 19:07:50.810 | INFO     | [startup] Модель 'Facenet' загружена
+2025-09-23 19:07:50.810 | INFO     | Загрузка модели 'Facenet512'
+2025-09-23 19:07:55.684 | INFO     | [startup] Модель 'Facenet512' загружена
+2025-09-23 19:07:55.685 | INFO     | [startup] Watchdog запущен (interval=600s)
+2025-09-23 19:07:55.685 | INFO     | [watchdog] smoketest отключён (нет изображения). Буду спать, но контроль не выполняю.
+2025-09-23 19:07:55.686 | INFO     | Application startup complete.
+2025-09-23 19:07:55.686 | INFO     | Application startup complete.
+2025-09-23 19:08:41.711 | INFO     | 127.0.0.1:54323 - "GET /docs HTTP/1.1" 200
+2025-09-23 19:08:42.029 | INFO     | 127.0.0.1:54323 - "GET /openapi.json HTTP/1.1" 200
+2025-09-23 19:09:04.279 | INFO     | 127.0.0.1:54333 - "POST /verify?threshold=0.7 HTTP/1.1" 200
+2025-09-23 19:09:35.674 | INFO     | 127.0.0.1:54344 - "POST /verify?threshold=0.7 HTTP/1.1" 200
+2025-09-23 19:09:56.587 | INFO     | 127.0.0.1:54350 - "POST /verify?threshold=0.7 HTTP/1.1" 200
+2025-09-23 19:10:18.044 | INFO     | Shutting down
+2025-09-23 19:10:18.044 | INFO     | Shutting down
+2025-09-23 19:10:18.153 | INFO     | Waiting for application shutdown.
+2025-09-23 19:10:18.154 | INFO     | Waiting for application shutdown.
+2025-09-23 19:10:18.154 | INFO     | [shutdown] Завершение работы приложения
+2025-09-23 19:10:18.155 | INFO     | Application shutdown complete.
+2025-09-23 19:10:18.155 | INFO     | Application shutdown complete.
+2025-09-23 19:10:18.156 | INFO     | Finished server process [22420]
+2025-09-23 19:10:18.156 | INFO     | Finished server process [22420]

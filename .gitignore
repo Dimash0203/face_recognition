@@ -95,3 +95,5 @@ desktop.ini
 *.bak
 *.swp
 docker-compose.override.yml
+
+/weights
