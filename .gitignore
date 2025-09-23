@@ -96,4 +96,4 @@ desktop.ini
 *.swp
 docker-compose.override.yml
 
-/weights
+/app/weights
